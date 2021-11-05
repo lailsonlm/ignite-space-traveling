@@ -1,1 +1,85 @@
-// TODO
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: calc(100vh - 6.562rem);
+
+  display: block;
+
+  .logo {
+    padding: 4.971rem 0 4.051rem 0;
+  }
+
+  .morePosts {
+    margin-top: 4rem;
+    border: 0;
+    background: none;
+
+    font-size: 1.125rem;
+    font-weight: 600;
+
+    color: var(--highlight);
+
+    transition: filter 0.2s;
+
+    &:hover {
+      filter: brightness(0.8);
+    }
+  }
+}
+
+.contentContainer {
+  max-width: 700px;
+  display: block;
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.03rem;
+  }
+
+  p {
+    font-size: 1.125rem;
+    font-weight: 400;
+    margin: 0.5rem 0 1.5rem 0;
+  }
+
+  .info {
+    display: flex;
+    font-size: 0.875rem;
+
+    .createdAt {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 1.5rem;
+      text-transform: capitalize;
+    
+      svg {
+        margin-right: 0.5rem;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .author {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        margin-right: 0.5rem;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  &:first-child {
+    margin-top: 4.05rem;
+  }
+
+  & + .contentContainer {
+    margin-top: 3rem;
+  }
+}

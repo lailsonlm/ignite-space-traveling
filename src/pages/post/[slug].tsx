@@ -1,15 +1,17 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head'
+import Link from 'next/link'
+import { useRouter } from 'next/router';
+
 import Prismic from '@prismicio/client';
 import { RichText } from 'prismic-dom'
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { FiCalendar, FiUser, FiClock } from "react-icons/fi"
 
-import { useRouter } from 'next/router';
 import Header from '../../components/Header';
-
 import { getPrismicClient } from '../../services/prismic';
+
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
@@ -34,19 +36,30 @@ interface Post {
 
 interface PostProps {
   post: Post;
+  navigation: {
+    prevPost: {
+      uid: string;
+      data: {
+        title: string;
+      };
+    }[];
+    nextPost: {
+      uid: string;
+      data: {
+        title: string;
+      };
+    }[];
+  }
 }
 
-export default function Post({ post }: PostProps): JSX.Element {
+export default function Post({ post, navigation }: PostProps): JSX.Element {
   const router = useRouter()
 
   if (router.isFallback) {
     return <div className={styles.isFallback}>Carregando...</div>
   }
 
-  const allContent = Math.ceil(post.data.content.reduce((acc, cur) => acc + cur.heading  + RichText.asText(cur.body), '').split(/[^a-zA-Z0-9]+/g).length / 200)
-
-  const totalMinutes = `${allContent} min`
-
+  const totalMinutes = Math.ceil(post.data.content.reduce((acc, cur) => acc + cur.heading  + RichText.asText(cur.body), '').split(/[^a-zA-Z0-9]+/g).length / 200)
 
   return (
     <>
@@ -82,7 +95,7 @@ export default function Post({ post }: PostProps): JSX.Element {
           <div className={styles.readingTime}>
             <FiClock />
             <span>
-              {totalMinutes}
+              {`${totalMinutes} min`}
             </span>
           </div>
         </div>
@@ -94,16 +107,41 @@ export default function Post({ post }: PostProps): JSX.Element {
                 
                 {content.body.map(body => {
                   return (
-                    <p>{body.text}</p>
+                    <p key={body.text}>{body.text}</p>
                     
                   )
                 })}
               </>
             )
           })}
-
         </article>
       </main>
+
+      <footer className={styles.footerPost}>
+        <div className={styles.postControl}>
+          <div className={navigation.prevPost.length !== 0 ? styles.previousPost : styles.noPost}>
+            <p>{navigation.prevPost[0]?.data.title ?? ''}</p>
+            <Link href={`/post/${navigation.prevPost[0]?.uid ?? ''}`}>
+              <a>Post anterior</a>
+            </Link>
+          </div>
+
+          <div className={navigation.nextPost.length !== 0 ? styles.nextPost : styles.noPost}>
+            <p>{navigation.nextPost[0]?.data.title ?? ''}</p>
+            <Link href={`/post/${navigation.nextPost[0]?.uid ?? ''}`}>
+              Próximo post
+            </Link>
+          </div>
+        </div>
+
+        <div className={styles.comments}>
+          Comentarios
+        </div>
+
+        <button className={styles.previewButton} type="button">
+          Sair do modo Preview
+        </button>
+      </footer>
     </>
   )
 }
@@ -113,10 +151,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   const posts = await prismic.query([
     Prismic.predicates.at('document.type', 'posts')
-  ], {
-    fetch: ['posts.title', 'posts.banner', 'posts.author', 'posts.content'],
-    pageSize: 100,
-  });
+  ]);
+
   
   return {
     paths: posts.results.map((post) => {
@@ -124,8 +160,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     }),
     fallback: true,
   };
-
-
 };
 
 export const getStaticProps: GetStaticProps = async context => {
@@ -136,6 +170,23 @@ export const getStaticProps: GetStaticProps = async context => {
   // console.log(context)
 
   // console.log(JSON.stringify(response, null, 2))
+
+  const nextPost = await prismic.query([
+    Prismic.predicates.at('document.type', 'posts')
+  ], {
+    pageSize: 1,
+    after: response.id,
+    orderings : '[document.first_publication_date]'
+  });
+
+  const prevPost = await prismic.query([
+    Prismic.predicates.at('document.type', 'posts')
+  ], {
+    pageSize: 1,
+    after: response.id,
+    orderings : '[document.first_publication_date desc]'
+  });
+
 
   const post = {
     uid: response.uid,
@@ -155,6 +206,10 @@ export const getStaticProps: GetStaticProps = async context => {
   return {
     props: {
       post,
+      navigation: {
+        nextPost: nextPost?.results,
+        prevPost: prevPost?.results
+      }
     },
   }
 };

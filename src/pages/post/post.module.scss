@@ -101,7 +101,7 @@
 }
 
 .footerPost {
-  max-width: 721px;
+  max-width: 700px;
   width: 100%;
   margin: 3.75rem auto 0;
   border-top: 1px solid #d7d7d710;
@@ -159,21 +159,4 @@
     margin: 5rem 0 5.012rem 0;
   }
 
-  .previewButton {
-    width: 100%;
-    background: var(--heading);
-    border: 0;
-    border-radius: 0.25rem;
-    
-    color: var(--background);
-    font-weight: 600;
-    font-size: 1.125rem;
-
-    padding: 1.125rem 0;
-    margin-bottom: 5rem;
-
-    &:hover {
-      filter: brightness(0.8);
-    }
-  }
 }

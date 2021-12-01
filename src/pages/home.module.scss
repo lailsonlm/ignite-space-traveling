@@ -10,7 +10,7 @@
   }
 
   .morePosts {
-    margin-top: 4rem;
+    margin: 4rem 0 5.5rem 0;
     border: 0;
     background: none;
 
@@ -30,6 +30,7 @@
 .contentContainer {
   max-width: 700px;
   display: block;
+
 
   h1 {
     font-size: 1.75rem;
@@ -81,4 +82,5 @@
   & + .contentContainer {
     margin-top: 3rem;
   }
+
 }

@@ -50,10 +50,11 @@ interface PostProps {
         title: string;
       };
     }[];
-  }
+  },
+  preview: boolean;
 }
 
-export default function Post({ post, navigation }: PostProps): JSX.Element {
+export default function Post({ post, navigation, preview }: PostProps): JSX.Element {
   const router = useRouter()
 
   if (router.isFallback) {
@@ -164,10 +165,17 @@ export default function Post({ post, navigation }: PostProps): JSX.Element {
         </div>
 
         <div className={styles.comments} ref={ref}> </div>
-
-        <button className={styles.previewButton} type="button">
-          Sair do modo Preview
-        </button>
+        
+        {preview && (
+          <aside>
+            <Link href="/api/exit-preview">
+              <a className={commonStyles.exitPreview}>
+                Sair do modo Preview
+              </a>
+            </Link>
+          </aside>
+        )}
+        
       </footer>
     </>
     
@@ -190,10 +198,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async context => {
+export const getStaticProps: GetStaticProps = async ({ params, previewData, preview = false }) => {
 
   const prismic = getPrismicClient();
-  const response = await prismic.getByUID('posts', String(context.params.slug), {});
+  const response = await prismic.getByUID('posts', String(params.slug), {
+    ref: previewData?.ref ?? null,
+  });
 
   // console.log(context)
 
@@ -204,7 +214,7 @@ export const getStaticProps: GetStaticProps = async context => {
   ], {
     pageSize: 1,
     after: response.id,
-    orderings : '[document.first_publication_date]'
+    orderings : '[document.first_publication_date desc]'
   });
 
   const prevPost = await prismic.query([
@@ -212,7 +222,7 @@ export const getStaticProps: GetStaticProps = async context => {
   ], {
     pageSize: 1,
     after: response.id,
-    orderings : '[document.first_publication_date desc]'
+    orderings : '[document.first_publication_date]'
   });
 
 
@@ -237,7 +247,8 @@ export const getStaticProps: GetStaticProps = async context => {
       navigation: {
         nextPost: nextPost?.results,
         prevPost: prevPost?.results
-      }
+      },
+      preview
     },
   }
 };

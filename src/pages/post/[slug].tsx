@@ -20,6 +20,7 @@ import styles from './post.module.scss';
 
 interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
   data: {
     title: string;
     banner: {
@@ -66,9 +67,11 @@ export default function Post({ post, navigation, preview }: PostProps): JSX.Elem
   const totalMinutes = Math.ceil(post.data.content.reduce((acc, cur) => acc + cur.heading  + RichText.asText(cur.body), '')
   .split(/[^a-zA-Z0-9]+/g).length / 200)
 
-  const ref = useRef()
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const ref = useRef<HTMLDivElement>()
 
   
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const script = document.createElement("script");
 
@@ -129,6 +132,10 @@ export default function Post({ post, navigation, preview }: PostProps): JSX.Elem
             </span>
           </div>
         </div>
+        <div className={styles.infoEditedPost}>
+          {post.last_publication_date ?? post.last_publication_date}
+        </div>
+
         <article className={styles.content}>
           {post.data.content.map(content => {
             return (
@@ -229,6 +236,12 @@ export const getStaticProps: GetStaticProps = async ({ params, previewData, prev
   const post = {
     uid: response.uid,
     first_publication_date: response.first_publication_date,
+    last_publication_date: format(
+      new Date(response.last_publication_date),
+      "'* editado em 'dd MMM yyyy,' às ' HH:mm",
+      {
+      locale: ptBR,
+    }),
     data: {
       title: response.data.title,
       subtitle: response.data.subtitle,

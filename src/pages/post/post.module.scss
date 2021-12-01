@@ -37,6 +37,7 @@
     gap: 1.5rem;
 
     font-size: 0.875rem;
+    color: var(--info);
 
     .createdAt {
       display: flex;
@@ -70,6 +71,15 @@
     }
   }
 
+  .infoEditedPost {
+    font-size: 0.875rem;
+    font-weight: 400;
+    margin-top: 1rem;
+    font-style: italic;
+
+    color: var(--info);
+  }
+
   .content {
     margin: 4rem 0;
     text-align: justify;
@@ -81,6 +91,8 @@
       font-weight: 700;
       line-height: 140%;
       margin: 0 0 2.25rem 0;
+
+      color: var(--heading);
     }
 
     p + h1 {
@@ -92,6 +104,8 @@
       font-size: 1.125rem;
       font-weight: 400;
       line-height: 140%;
+
+      color: var(--body);
     }
 
     p + p {
@@ -109,16 +123,20 @@
   .postControl {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     margin-top: 3rem;
+
 
     .previousPost {
       display: block;
       text-align: left;
+      width: 50%;
 
       p {
         font-size: 1.125rem;
         margin-bottom: 0.5rem;
+        color: var(--heading);
+        text-overflow: ellipsis;
       }
 
       a {
@@ -134,10 +152,13 @@
     .nextPost {
       display: block;
       text-align: right;
+      width: 50%;
 
       p {
         font-size: 1.125rem;
         margin-bottom: 0.5rem;
+        color: var(--heading);
+        text-overflow: ellipsis;
       }
 
       a {

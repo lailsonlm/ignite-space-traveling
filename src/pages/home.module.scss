@@ -36,17 +36,23 @@
     font-size: 1.75rem;
     font-weight: 700;
     letter-spacing: -0.03rem;
+
+    color: var(--heading);
   }
 
   p {
     font-size: 1.125rem;
     font-weight: 400;
     margin: 0.5rem 0 1.5rem 0;
+
+    color: var(--body);
   }
 
   .info {
     display: flex;
     font-size: 0.875rem;
+
+    color: var(--info);
 
     .createdAt {
       display: flex;

@@ -2,6 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router';
+import { useEffect, useRef } from 'react';
 
 import Prismic from '@prismicio/client';
 import { RichText } from 'prismic-dom'
@@ -59,7 +60,35 @@ export default function Post({ post, navigation }: PostProps): JSX.Element {
     return <div className={styles.isFallback}>Carregando...</div>
   }
 
-  const totalMinutes = Math.ceil(post.data.content.reduce((acc, cur) => acc + cur.heading  + RichText.asText(cur.body), '').split(/[^a-zA-Z0-9]+/g).length / 200)
+  
+
+  const totalMinutes = Math.ceil(post.data.content.reduce((acc, cur) => acc + cur.heading  + RichText.asText(cur.body), '')
+  .split(/[^a-zA-Z0-9]+/g).length / 200)
+
+  const ref = useRef()
+
+  
+  useEffect(() => {
+    const script = document.createElement("script");
+
+    const anchor = ref.current;
+
+    if(anchor.querySelector("div") !== null) {
+      anchor.removeChild(anchor.querySelector("div"))
+    }
+    
+    script.src = "https://utteranc.es/client.js";
+    script.crossOrigin = "anonymous";
+    script.async = true;
+    script.defer = true;
+    
+    script.setAttribute("repo", "lailsonlm/ignite-space-traveling");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute( "theme", "photon-dark");
+
+    anchor.appendChild(script);
+  });
+  
 
   return (
     <>
@@ -134,15 +163,14 @@ export default function Post({ post, navigation }: PostProps): JSX.Element {
           </div>
         </div>
 
-        <div className={styles.comments}>
-          Comentarios
-        </div>
+        <div className={styles.comments} ref={ref}> </div>
 
         <button className={styles.previewButton} type="button">
           Sair do modo Preview
         </button>
       </footer>
     </>
+    
   )
 }
 

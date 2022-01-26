@@ -8,7 +8,6 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { FiCalendar, FiUser } from "react-icons/fi"
 import Prismic from '@prismicio/client'
 
-import Image from 'next/image'
 import { getPrismicClient } from '../services/prismic';
 
 import commonStyles from '../styles/common.module.scss';
@@ -56,7 +55,7 @@ export default function Home({ postsPagination, preview }: HomeProps): JSX.Eleme
         <title>Home | Space Traveling</title>
       </Head>
       <main className={styles.container}>
-        <Image src="/logo.svg" alt="Logo Space Traveling" width="239px" height="26px" className={styles.logo}/>
+        <img src="/logo.svg" alt="logo" className={styles.logo} />
 
         {currentPage.map(post => (
           <section className={styles.contentContainer} key={post.uid}>

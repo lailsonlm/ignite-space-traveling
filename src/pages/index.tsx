@@ -55,7 +55,7 @@ export default function Home({ postsPagination, preview }: HomeProps): JSX.Eleme
         <title>Home | Space Traveling</title>
       </Head>
       <main className={styles.container}>
-        <img src="/images/logo.svg" alt="logo" className={styles.logo} />
+        <img src="/logo.svg" alt="logo" className={styles.logo} />
 
         {currentPage.map(post => (
           <section className={styles.contentContainer} key={post.uid}>
